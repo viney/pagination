@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Pagination</title>
+		<link rel="stylesheet" media="screen" href="public/stylesheets/modern-responsive.css">
+        <link rel="stylesheet" media="screen" href="public/stylesheets/modern.css">
+		<link rel="stylesheet" media="screen" href="public/stylesheets/site.css">
+		<link rel="shortcut icon" type="image/png" href="public/images/favicon.png">
+		<!-- js -->
+		<script src="public/javascripts/jquery-1.8.2.min.js" type="text/javascript"></script>
+	</head>
+	<body class="modern-ui">
+		<div class="page">
+			<table class="bordered striped hovered">
+				<thead>
+					<tr>
+						<th>Uid</th>
+						<th class="right">Name</th>
+						<th class="right">Age</th>
+					</tr>
+				</thead>
+				<tbody>
+                    {{range .Users}}
+					<tr>
+                        <td>{{.Uid}}</td>
+                        <td class="right">{{.Name}}</td>
+                        <td class="right">{{.Age}}</td>
+					</tr>
+                    {{end}}
+				</tbody>
+			</table>
+			<div class="pagination">
+				<ul>
+					<li class="first">
+						<a></a>
+					</li>
+					<li class="prev">
+						<a></a>
+					</li>
+					<li>
+						<a>1</a>
+					</li>
+					<li>
+						<a>2</a>
+					</li>
+					<li class="active">
+						<a>3</a>
+					</li>
+					<li class="spaces">
+						<a>...</a>
+					</li>
+					<li class="disabled">
+						<a>4</a>
+					</li>
+					<li>
+						<a>500</a>
+					</li>
+					<li class="next">
+						<a></a>
+					</li>
+					<li class="last">
+						<a></a>
+					</li>
+				</ul>
+			</div>
+			<div class="nav-bar">
+				<div class="nav-bar-inner padding10">
+					<span class="element"> 2013, Pagination &copy;Author：<a class="fg-color-white" href="mailto:viney.chow@gmail.com">Viney</a> </span>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
