@@ -25,7 +25,9 @@ func listHandle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// findAll
-	users, err := FindAll(page.CurrentPage(), page.LineSize())
+	firstResult := (page.CurrentPage() - uint(1)) * page.LineSize()
+	maxResult := page.LineSize()
+	users, err := FindAll(firstResult, maxResult)
 	if err != nil {
 		fmt.Println("FindAll: ", err.Error())
 		return
@@ -38,12 +40,28 @@ func listHandle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	prev := page.CurrentPage() - 1
+	if prev <= 1 {
+		prev = 1
+	}
+
+	next := page.CurrentPage() + 1
+	if next >= page.TotalPage() {
+		next = page.TotalPage()
+	}
+
 	var data = struct {
-		Users []User
-		Page  paging.Paging
+		Users       []User
+		CurrentPage string
+		TotalPage   string
+		Prev        string
+		Next        string
 	}{
-		Users: users,
-		Page:  page,
+		Users:       users,
+		CurrentPage: strconv.Itoa(int(page.CurrentPage())),
+		TotalPage:   strconv.Itoa(int(page.TotalPage())),
+		Prev:        strconv.Itoa(int(prev)),
+		Next:        strconv.Itoa(int(next)),
 	}
 
 	// exec
@@ -67,19 +85,20 @@ func pagination(r *http.Request) (paging.Paging, error) {
 	page.SetTotalPage()
 
 	currentPage := uint(0)
-	if r.Form["currentPage"] == nil {
-		currentPage = 1
+	if len(r.FormValue("currentPage")) == 0 {
+		currentPage = uint(1)
 	} else {
-		newCurrentPage, err := strconv.ParseUint((r.Form["currentPage"][0]), 10, 32)
+		newCurrentPage, err := strconv.ParseUint((r.FormValue("currentPage")), 10, 32)
 		if err != nil {
 			fmt.Println("Atoi: ", err.Error())
 			return nil, err
 		}
 		if newCurrentPage < 1 {
-			currentPage = 1
+			currentPage = uint(1)
 		} else if uint(newCurrentPage) > page.TotalCount() {
 			currentPage = page.TotalCount()
 		}
+		currentPage = uint(newCurrentPage)
 	}
 	page.SetCurrentPage(currentPage)
 
